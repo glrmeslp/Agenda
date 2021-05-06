@@ -1,0 +1,6 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Contacts" parent="BaseAppTheme">
+        <item name="colorSecondary">@color/black</item>
+    </style>
+</resources>

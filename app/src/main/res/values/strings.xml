@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Contacts</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
+    <string name="add_phone">add phone</string>
+    <string name="add_email">add email</string>
+    <string name="bt_done">Done</string>
+    <string name="bt_delete_contact">Delete Contact</string>
+    <string name="menu_remove_delete">Delete</string>
+    <string name="menu_remove_cancel">Cancel</string>
+    <string name="add_address">add address</string>
+    <string name="add_birthday">add birthday</string>
+    <string name="add_related_name">add related name</string>
+    <string name="add_new_contact">Add New Contact</string>
+    <string name="alert_dialog_remove_contact_tittle">Remove contact?</string>
+</resources>
