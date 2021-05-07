@@ -1,5 +1,6 @@
 package br.com.glrmeslp.github.contacts.ui.layouts
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -87,8 +88,9 @@ class FormContactsActivity : AppCompatActivity(), IContactActivityConstants {
             address = addressField.text.toString()
             birthday = birthdayField.text.toString()
         }
-        setResult(resultCodeSaveOrEdit, Intent().putExtra(keyContact, contact))
-        finish()
+        if (buttonDeleteContact.isVisible){
+            returnContact(resultCodeEdit)
+        } else returnContact(resultCodeSave)
     }
 
     private fun configureButtonDeleteContact() {
@@ -101,6 +103,7 @@ class FormContactsActivity : AppCompatActivity(), IContactActivityConstants {
         MaterialAlertDialogBuilder(view.context)
             .setTitle(resources.getString(R.string.alert_dialog_remove_contact_tittle))
             .setPositiveButton(resources.getString(R.string.menu_remove_delete)) { _, _ ->
+                returnContact(resultCodeRemove)
                 setResult(resultCodeRemove, Intent().putExtra(keyContact, contact))
                 finish()
             }
@@ -108,5 +111,14 @@ class FormContactsActivity : AppCompatActivity(), IContactActivityConstants {
             }
             .show()
     }
+
+    private fun returnContact(code: Int){
+        setResult(
+            Activity.RESULT_OK,
+            Intent().putExtra(keyContact,contact).putExtra(keyResultCodeContact,code)
+        )
+        finish()
+    }
+
 
 }

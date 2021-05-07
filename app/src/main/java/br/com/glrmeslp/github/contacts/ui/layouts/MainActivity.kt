@@ -1,5 +1,6 @@
 package br.com.glrmeslp.github.contacts.ui.layouts
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -47,16 +48,16 @@ class MainActivity : AppCompatActivity(), IContactActivityConstants {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (isContactResult(requestCode, data)) {
-            val contact: Contact = data!!.getParcelableExtra(keyContact)!!
-            when (resultCode) {
-                resultCodeSaveOrEdit -> if (contact.id == 0) {
-                    ContactDAO().saves(contact)
-                } else {
-                    ContactDAO().edit(contact)
+            if (resultCode == Activity.RESULT_OK){
+                val contact: Contact = data!!.getParcelableExtra(keyContact)!!
+
+                when (data.getIntExtra(keyResultCodeContact,resultCodeInvalid)) {
+                    resultCodeSave -> ContactDAO().saves(contact)
+                    resultCodeEdit -> ContactDAO().edit(contact)
+                    resultCodeRemove -> ContactDAO().remove(contact.id)
                 }
-                resultCodeRemove -> ContactDAO().remove(contact.id)
+                adapter.actualize()
             }
-            adapter.actualize()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
