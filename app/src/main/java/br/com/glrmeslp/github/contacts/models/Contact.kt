@@ -2,18 +2,24 @@ package br.com.glrmeslp.github.contacts.models
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity
 class Contact(
-        var firstName: String = "",
-        var lastName: String = "",
-        var phoneNumber: String = "",
-        var emailAddress: String = "",
-        var address: String = "",
-        var birthday: String = ""
-
+    @ColumnInfo(name = "first_name") var firstName: String = "",
+    @ColumnInfo(name = "last_name") var lastName: String = "",
+    @ColumnInfo(name = "phone_number") var phoneNumber: String = "",
+    @ColumnInfo(name = "email_address") var emailAddress: String = "",
+    @ColumnInfo(name = "address") var address: String = "",
+    @ColumnInfo(name = "birthday") var birthday: String = ""
 ) : Parcelable {
 
-    var id: Int = 0
+
+    @PrimaryKey(autoGenerate = true)
+    var uid: Int = 0
+
 
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
@@ -23,7 +29,7 @@ class Contact(
         parcel.readString().toString(),
         parcel.readString().toString()
     ) {
-        id = parcel.readInt()
+        uid = parcel.readInt()
     }
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
@@ -33,7 +39,7 @@ class Contact(
         dest?.writeString(emailAddress)
         dest?.writeString(address)
         dest?.writeString(birthday)
-        dest?.writeInt(id)
+        dest?.writeInt(uid)
     }
 
     override fun toString(): String {

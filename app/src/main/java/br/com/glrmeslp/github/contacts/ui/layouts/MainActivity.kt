@@ -5,9 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import br.com.glrmeslp.github.contacts.R
+import br.com.glrmeslp.github.contacts.database.ContactDatabase
 import br.com.glrmeslp.github.contacts.models.Contact
 import br.com.glrmeslp.github.contacts.models.ContactDAO
 import br.com.glrmeslp.github.contacts.ui.adapter.ContactAdapter
@@ -17,12 +20,21 @@ class MainActivity : AppCompatActivity(), IContactActivityConstants {
 
     private lateinit var listOfContacts: RecyclerView
     private lateinit var adapter: ContactAdapter
+    private lateinit var dao: ContactDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val db = Room.databaseBuilder(
+            applicationContext,
+            ContactDatabase::class.java,
+            "database-contact"
+        ).allowMainThreadQueries().build()
+        dao = db.contactDao()
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.main_top_bar))
         configureRecyclerView()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -48,13 +60,21 @@ class MainActivity : AppCompatActivity(), IContactActivityConstants {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (isContactResult(requestCode, data)) {
-            if (resultCode == Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
                 val contact: Contact = data!!.getParcelableExtra(keyContact)!!
-
-                when (data.getIntExtra(keyResultCodeContact,resultCodeInvalid)) {
-                    resultCodeSave -> ContactDAO().saves(contact)
-                    resultCodeEdit -> ContactDAO().edit(contact)
-                    resultCodeRemove -> ContactDAO().remove(contact.id)
+                when (data.getIntExtra(keyResultCodeContact, resultCodeInvalid)) {
+                    resultCodeSave -> {
+                        dao.insertAll(contact)
+                        adapter.insert(contact)
+                    }
+                    resultCodeEdit -> {
+                        dao.update(contact)
+                        adapter.update(contact)
+                    }
+                    resultCodeRemove -> {
+                        dao.delete(contact)
+                        adapter.delete(contact)
+                    }
                 }
                 adapter.actualize()
             }
@@ -78,7 +98,7 @@ class MainActivity : AppCompatActivity(), IContactActivityConstants {
     }
 
     private fun configureAdapter() {
-        adapter = ContactAdapter(ContactDAO.contacts)
+        adapter = ContactAdapter(dao.getAll())
         listOfContacts.adapter = adapter
         adapter.onItemClickListener = object : IOnItemClickListener {
             override fun onItemClick(contact: Contact) {

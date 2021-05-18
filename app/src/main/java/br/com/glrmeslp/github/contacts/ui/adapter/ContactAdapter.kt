@@ -32,4 +32,25 @@ class ContactAdapter(
     fun actualize() {
         notifyDataSetChanged()
     }
+
+    fun insert(contact: Contact){
+        contacts.add(contact)
+    }
+
+    fun update(contact: Contact){
+        val index = contacts.indexOf(search(contact))
+        contacts[index] = contact
+    }
+    fun delete(contactRemove: Contact){
+        contacts.remove(search(contactRemove))
+    }
+
+    private fun search(contactSearch: Contact): Contact? {
+        for (contact in contacts){
+            if (contact.uid == contactSearch.uid){
+                return contact
+            }
+        }
+        return null
+    }
 }

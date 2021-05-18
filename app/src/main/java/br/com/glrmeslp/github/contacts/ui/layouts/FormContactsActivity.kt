@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputEditText
 
 class FormContactsActivity : AppCompatActivity(), IContactActivityConstants {
 
-    private var contact: Contact = Contact()
+    private lateinit var contact: Contact
     private val titleAppBar = "New Contact"
 
     private lateinit var firstNameField: TextInputEditText
@@ -80,17 +80,28 @@ class FormContactsActivity : AppCompatActivity(), IContactActivityConstants {
     }
 
     private fun configureMenuDone() {
-        contact.run {
-            firstName = firstNameField.text.toString()
-            lastName = lastNameField.text.toString()
-            phoneNumber = phoneNumberField.text.toString()
-            emailAddress = emailAddressField.text.toString()
-            address = addressField.text.toString()
-            birthday = birthdayField.text.toString()
+        if (!buttonDeleteContact.isVisible) {
+            contact = Contact(
+                firstName = firstNameField.text.toString(),
+                lastName = lastNameField.text.toString(),
+                phoneNumber = phoneNumberField.text.toString(),
+                emailAddress = emailAddressField.text.toString(),
+                address = addressField.text.toString(),
+                birthday = birthdayField.text.toString()
+            )
+            returnContact(resultCodeSave)
         }
-        if (buttonDeleteContact.isVisible){
+        else {
+            contact.run {
+            firstName = firstNameField.text.toString()
+                lastName = lastNameField.text.toString()
+                phoneNumber = phoneNumberField.text.toString()
+                emailAddress = emailAddressField.text.toString()
+                address = addressField.text.toString()
+                birthday = birthdayField.text.toString()
+            }
             returnContact(resultCodeEdit)
-        } else returnContact(resultCodeSave)
+        }
     }
 
     private fun configureButtonDeleteContact() {
@@ -112,10 +123,10 @@ class FormContactsActivity : AppCompatActivity(), IContactActivityConstants {
             .show()
     }
 
-    private fun returnContact(code: Int){
+    private fun returnContact(code: Int) {
         setResult(
             Activity.RESULT_OK,
-            Intent().putExtra(keyContact,contact).putExtra(keyResultCodeContact,code)
+            Intent().putExtra(keyContact, contact).putExtra(keyResultCodeContact, code)
         )
         finish()
     }
