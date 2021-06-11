@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity(), IContactActivityConstants {
             "database-contact"
         ).allowMainThreadQueries().build()
         dao = db.contactDao()
-
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.main_top_bar))
         configureRecyclerView()
@@ -106,5 +105,6 @@ class MainActivity : AppCompatActivity(), IContactActivityConstants {
             }
         }
     }
+
 
 }
